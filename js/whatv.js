@@ -22,7 +22,8 @@ WhaTV.core = (function WhaTVCoreClosure(global, WhaTV) {
     // The div ID of date
     dateDivId: 'date',
     fullscreen: true,
-    transitionDuration: 1000
+    transitionDuration: 1000,
+    inputList: 'slides.json'
   },
       // Pointer to current slide
       pointer = 0,
@@ -344,11 +345,24 @@ WhaTV.core = (function WhaTVCoreClosure(global, WhaTV) {
     registerInformationsListener:
         function registerInformationsListener(callback) {
       informationListener = callback;
+    },
+
+    //start WhaTv & allow user to changes defaults values through the option var;
+    run: function run(options){
+
+    	if(options != null){
+	    	for (var key in defaults){
+	    		 if(options[key] != null){
+	    			 defaults[key] = options[key];
+	    		 }
+	    	}
+    	}
+    	
+    	  // Launch WhaTV : parses slides informations, launching ignition
+    	  WhaTV.util.parseJSON(defaults.inputList, ignition);
     }
   };
 
-  // Launch WhaTV : parses slides informations, launching ignition
-  WhaTV.util.parseJSON('slides.json', ignition);
   
   // For javascript dummies : the whole function WhaTVCoreInitClosure returns
   // an object, which has access to the whole content of the function. You
@@ -361,6 +375,7 @@ WhaTV.core = (function WhaTVCoreClosure(global, WhaTV) {
     pause: publicMethods.pause,
     resume: publicMethods.resume,
     registerInformationsListener: publicMethods.registerInformationsListener,
+    run: publicMethods.run,
     //debug
     stop: publicMethods.stop,
     onSlideTimeout: onSlideTimeout,
